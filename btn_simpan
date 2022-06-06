@@ -1,0 +1,30 @@
+Private Sub btnsimpan_Click(sender As Object, e As EventArgs) Handles btnsimpan.Click
+        Dim idjabtan As String
+        Dim jengkel As String
+        If (rlaki.Checked) Then
+            jengkel = rlaki.Text
+        Else
+            jengkel = rperempuan.Text
+        End If
+        If txtnip.Text = "" Or txtnama.Text = "" Or cmbjabatan.Text = "" Or txtalamat.Text = "" Then
+            MsgBox("Data tidak boleh kosong", MsgBoxStyle.Critical, Title:="Error")
+        Else
+            tbjabatan = proses.ExecuteQuery("Select * from Tb_Jabatan where Jabatan = '" & cmbjabatan.Text & "'")
+            If tbjabatan.Rows.Count <> 0 Then
+                idjabtan = tbjabatan.Rows(0).Item("ID_Jabatan").ToString
+            End If
+            tbkaryawan = proses.ExecuteQuery("Select * From Tb_Karyawan where NIP ='" & txtnip.Text & "'")
+            If tbkaryawan.Rows.Count = 0 Then
+                If MsgBox("Yakin ingin simpan ?", vbYesNo, "Confirmation") = vbYes Then
+                    SQL = "Insert into Tb_Karyawan Values ( '" & txtnip.Text & "', '" & txtnama.Text & "', '" & idjabtan & "','" & jengkel & "','" & txttlp.Text & "', '" & txtalamat.Text & "')"
+                    proses.ExecuteNonQuery(SQL)
+                    MessageBox.Show("Siap...!!!", "Simpan Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Call bersih()
+                    fillgrid()
+                End If
+            Else
+                MsgBox("NIP " & txtnip.Text & " Data sudah ada .. !! ", MsgBoxStyle.
+                       Critical, Title:=" silahkan input kembali")
+            End If
+        End If
+    End Sub
